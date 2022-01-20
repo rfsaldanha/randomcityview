@@ -1,14 +1,25 @@
 library(shiny)
 library(shinyMobile)
+library(maps)
+
+# Cities data base
+cities <- maps::world.cities
+
+
+# Get random city coordinates function
+random_city <- function(cities_db = cities){
+  res <- cities_db[sample(1:nrow(cities_db), 1),]
+  return(res)
+}
 
 
 
 shinyApp(
   ui = f7Page(
-    title = "My app",
+    title = "Random city view",
     f7SingleLayout(
       navbar = f7Navbar(
-        title = "Single Layout",
+        title = "Random city view",
         hairline = TRUE,
         shadow = TRUE
       ),

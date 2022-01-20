@@ -2,13 +2,9 @@ library(shiny)
 library(shinyMobile)
 library(maps)
 library(leaflet)
-library(leaflet.providers)
 
 # Cities data base
 cities <- maps::world.cities
-
-# Base map providers
-base_map_providers <- providers_default()[["providers"]]
 
 # Get random city coordinates function
 random_city <- function(cities_db = cities, country = "Any"){
@@ -31,9 +27,11 @@ shinyApp(
     title = "Random city view",
     f7SingleLayout(
       navbar = f7Navbar(
-        title = uiOutput(outputId = "city_info"),
-        hairline = TRUE,
-        shadow = TRUE
+        title = f7Float(side = "left", uiOutput(outputId = "city_info")),
+        f7Col(
+          width = 3,
+          f7Float(side = "right", f7Button(inputId = "go_btn", label = "Change!", rounded = TRUE, outline = TRUE, fill = FALSE))
+        )
       ),
       toolbar = f7Toolbar(
         position = "bottom",
@@ -41,10 +39,9 @@ shinyApp(
           inputId = "base_map",
           label = "Base map",
           selected = "Esri.WorldImagery",
-          choices = base_map_providers,
+          choices = c("Esri.WorldImagery", "OpenStreetMap", "Stamen", "Stamen.Watercolor"),
           openIn = "popup"
         ),
-        f7Button(inputId = "go_btn", label = "Change!", rounded = TRUE, outline = TRUE, fill = FALSE),
         f7SmartSelect(
           inputId = "country",
           label = "Country",
@@ -67,7 +64,7 @@ shinyApp(
           options = providerTileOptions(noWrap = TRUE)
         ) |>
         setView(lng = city$long, lat = city$lat, zoom = 16) |>
-        addMiniMap(zoomLevelOffset = -5)
+        addMiniMap(toggleDisplay = TRUE)
       
       # Update city info
       output$city_info <- renderUI({

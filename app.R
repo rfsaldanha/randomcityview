@@ -59,10 +59,7 @@ shinyApp(
       city <- random_city(country = input$country)
       
       map <- leaflet() |>
-        addProviderTiles(
-          input$base_map,
-          options = providerTileOptions(noWrap = TRUE)
-        ) |>
+        addProviderTiles(input$base_map) |>
         setView(lng = city$long, lat = city$lat, zoom = 16) |>
         addMiniMap(toggleDisplay = TRUE)
       

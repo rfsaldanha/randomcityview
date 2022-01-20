@@ -33,11 +33,7 @@ shinyApp(
       navbar = f7Navbar(
         title = uiOutput(outputId = "city_info"),
         hairline = TRUE,
-        shadow = TRUE,
-        column(
-          width = 3,
-          f7Button(inputId = "go_btn", label = "Change!")
-        )
+        shadow = TRUE
       ),
       toolbar = f7Toolbar(
         position = "bottom",
@@ -48,6 +44,7 @@ shinyApp(
           choices = base_map_providers,
           openIn = "popup"
         ),
+        f7Button(inputId = "go_btn", label = "Change!", rounded = TRUE, outline = TRUE, fill = FALSE),
         f7SmartSelect(
           inputId = "country",
           label = "Country",

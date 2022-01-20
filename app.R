@@ -59,7 +59,7 @@ shinyApp(
       city <- random_city(country = input$country)
       
       map <- leaflet() |>
-        addProviderTiles(input$base_map) |>
+        addProviderTiles("Esri.WorldImagery") |>
         setView(lng = city$long, lat = city$lat, zoom = 16) |>
         addMiniMap(toggleDisplay = TRUE)
       
@@ -79,6 +79,11 @@ shinyApp(
       output$map <- renderLeaflet(map())
     })
     
+    # Change base map
+    observeEvent(input$base_map, {
+      leafletProxy("map") |>
+        addProviderTiles(input$base_map)
+    })
     
     
     

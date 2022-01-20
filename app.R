@@ -66,7 +66,8 @@ shinyApp(
           input$base_map,
           options = providerTileOptions(noWrap = TRUE)
         ) |>
-        setView(lng = city$long, lat = city$lat, zoom = 16)
+        setView(lng = city$long, lat = city$lat, zoom = 16) |>
+        addMiniMap(zoomLevelOffset = -5)
       
       # Update city info
       output$city_info <- renderUI({

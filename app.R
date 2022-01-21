@@ -4,17 +4,16 @@ library(maps)
 library(leaflet)
 
 # Cities data base
-cities <- maps::world.cities
+cities <- readRDS(file = "cities.rds")
 
 # Get random city coordinates function
-random_city <- function(cities_db = cities, country = "Any"){
-  if(country == "Any"){
+random_city <- function(cities_db = cities, country_sel = "Any"){
+  if(country_sel == "Any"){
     res <- cities_db[sample(1:nrow(cities_db), 1),]
   } else {
-    res <- subset(cities_db, country.etc == country)
+    res <- subset(cities_db, country == country_sel)
     res <- res[sample(1:nrow(res), 1),]
   }
-  
   return(res)
 }
 
@@ -46,7 +45,7 @@ shinyApp(
           inputId = "country",
           label = "Country",
           selected = "Any",
-          choices = c("Any", sort(unique(cities$country.etc))),
+          choices = c("Any", sort(unique(cities$country))),
           openIn = "popup"
         )
       ),
@@ -56,11 +55,12 @@ shinyApp(
   server = function(input, output) {
     # Map function
     map <- function(){
+      
       city <- random_city(country = input$country)
       
       map <- leaflet() |>
         addProviderTiles(input$base_map) |>
-        setView(lng = city$long, lat = city$lat, zoom = 16) |>
+        setView(lng = city$lon, lat = city$lat, zoom = 16) |>
         addMiniMap(toggleDisplay = TRUE)
       
       # Update city info

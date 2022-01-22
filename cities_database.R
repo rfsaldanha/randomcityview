@@ -10,8 +10,8 @@ us_cities <- read_csv(file = "https://raw.githubusercontent.com/rfsaldanha/US-Ci
   mutate(country = "EUA")
 
 # Other contries
-#temp_file <- tempfile()
-#temp_dir <- tempdir()
+temp_file <- tempfile()
+temp_dir <- tempdir()
 #download.file(url = "https://geonames.nga.mil/gns/html/cntyfile/geonames_fc_20220117.zip", mode = "wb", destfile = temp_file)
 #unzip(zipfile = temp_file, exdir = temp_dir, files =  "Countries_populatedplaces_p.txt")
 unzip(zipfile = "/Users/raphaelsaldanha/Downloads/geonames_fc_20220117.zip", exdir = temp_dir, files =  "Countries_populatedplaces_p.txt")
@@ -26,4 +26,4 @@ cities <- other_cities_db %>%
   bind_rows(us_cities) %>%
   mutate(id = row_number())
 
-write_feather(x = cities, sink = "cities.feather")
+write_feather(x = cities, sink = "cities.feather", compression = "uncompressed")

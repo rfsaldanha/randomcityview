@@ -1,18 +1,32 @@
 library(shiny)
 library(shinyMobile)
+library(arrow)
+library(dplyr)
 library(maps)
 library(leaflet)
 
 # Cities data base
-cities <- readRDS(file = "cities.rds")
+cities_db <- open_dataset(sources = "cities.feather", format = "feather")
+country_vec <- cities_db %>%
+  distinct(country) %>%
+  arrange(country) %>%
+  collect() %>%
+  pull(country)
+n <- nrow(cities_db)
+
 
 # Get random city coordinates function
-random_city <- function(cities_db = cities, country_sel = "Any"){
+random_city <- function(cities = cities_db, country_sel = "Any"){
   if(country_sel == "Any"){
-    res <- cities_db[sample(1:nrow(cities_db), 1),]
+    seed <- as.integer(runif(n = 1, min = 1, max = 7427243))
+    res <- cities %>%
+      filter(id == seed) %>%
+      collect()
   } else {
-    res <- subset(cities_db, country == country_sel)
-    res <- res[sample(1:nrow(res), 1),]
+    res <- cities %>%
+      filter(country == country_sel) %>%
+      collect() %>%
+      slice_sample(n = 1)
   }
   return(res)
 }
@@ -45,7 +59,7 @@ shinyApp(
           inputId = "country",
           label = "Country",
           selected = "Any",
-          choices = c("Any", sort(unique(cities$country))),
+          choices = c("Any", country_vec),
           openIn = "popup"
         )
       ),
